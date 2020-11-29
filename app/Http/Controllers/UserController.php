@@ -29,21 +29,10 @@ class UserController extends Controller
         }
         $user = DB::table('tbl_user')->where('username', $request->username)->first();
 
-        if ($user->roleId > 30)
-        {
-            $result = DB::table('tbl_user')
-                    ->select('tbl_user.id', 'tbl_user.nama', 'tbl_user.NIP', 'tbl_user.email', 'tbl_user.email2','tbl_user.email3','tbl_user.username', 'tbl_user.foto', 'tbl_user.roleId', 'tbl_user.roleName')
-                    ->where('username', $request->username)
-                    ->first();
-        }
-        else
-        {
-            $result = DB::table('tbl_user')
-                    ->join('tbl_satker', 'tbl_user.satkerId', '=', 'tbl_satker.id')
-                    ->select('tbl_user.id', 'tbl_user.nama', 'tbl_user.NIP', 'tbl_user.satkerId', 'tbl_user.email','tbl_user.email2','tbl_user.email3', 'tbl_user.username', 'tbl_user.foto', 'tbl_user.roleId', 'tbl_user.roleName', 'tbl_satker.namaSatker')
-                    ->where('username', $request->username)
-                    ->first();
-        }
+        $result = DB::table('tbl_user')
+                ->select('tbl_user.id', 'tbl_user.nama', 'tbl_user.nip', 'tbl_user.email', 'tbl_user.username', 'tbl_user.foto', 'tbl_user.roleId')
+                ->where('username', $request->username)
+                ->first();
 
         return $this->respondWithToken($token, $result);
     }
@@ -333,7 +322,7 @@ class UserController extends Controller
     protected function respondWithToken($token, $result)
     {
         return response()->json([
-            'access_token' => $token,
+            'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 260,
             'user' => $result

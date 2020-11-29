@@ -16,7 +16,6 @@ class LogActivity extends Model
     protected $fillable = [
         'userId',
         'namaUser',
-        'satkerId',
         'subject',
         'status',
         'url',
