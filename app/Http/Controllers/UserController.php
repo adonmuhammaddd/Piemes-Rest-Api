@@ -14,10 +14,10 @@ use File;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('jwtmiddleware', ['except' => 'login']);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('jwtmiddleware', ['except' => 'login']);
+    // }
 
     public function login(Request $request)
     {
@@ -30,7 +30,7 @@ class UserController extends Controller
         $user = DB::table('tbl_user')->where('username', $request->username)->first();
 
         $result = DB::table('tbl_user')
-                ->select('tbl_user.id', 'tbl_user.nama', 'tbl_user.nip', 'tbl_user.email', 'tbl_user.username', 'tbl_user.foto', 'tbl_user.roleId')
+                ->select('tbl_user.id', 'tbl_user.nama', 'tbl_user.email', 'tbl_user.username', 'tbl_user.foto', 'tbl_user.roleId')
                 ->where('username', $request->username)
                 ->first();
 
@@ -67,8 +67,6 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
-            'NIP' => 'required|string|max:255',
-            'satkerId' => 'required|numeric|max:255',
             'email' => 'required|max:255|unique:tbl_user',
             'username' => 'required|max:255|unique:tbl_user',
             'password' => 'required|string|min:6|confirmed',
@@ -78,11 +76,7 @@ class UserController extends Controller
         ]);
 
         $nama = $request->get('nama');
-        $NIP = $request->get('NIP');
-        $satkerId = $request->get('satkerId');
         $email = $request->get('email');
-        $email2 = $request->get('email2');
-        $email3 = $request->get('email3');
         $username = $request->get('username');
         $password = $request->get('password');
         $roleId = $request->get('roleId');
@@ -109,11 +103,7 @@ class UserController extends Controller
         {
             $insert = [
                 'nama' => $nama,
-                'satkerId' => $satkerId,
-                'NIP' => $NIP,
                 'email' => $email,
-                'email2' => $email2,
-                'email3' => $email3,
                 'username' => $username,
                 'password' => Hash::make($password),
                 'roleId' => $roleId,
@@ -121,23 +111,11 @@ class UserController extends Controller
                 'foto' => $fileNameToStore
             ];
             // \LogActivity::addToLog(Auth::user()->nama.' dari cabang '.Auth::user()->satkerId.' telah menambahkan data User '.$nama);
-            $satker = DB::table('tbl_satker')
-                ->where('id', $satkerId)
-                ->first();
-            
-            $userId = DB::table('tbl_user')
-                ->latest('created_at')
-                ->first();
 
             $result = [
-                'id' => $userId->id,
                 'nama' => $nama,
-                'satkerId' => $satkerId,
-                'namaSatker' => $satker->namaSatker,
                 'NIP' => $NIP,
                 'email' => $email,
-                'email2' => $email2,
-                'email3' => $email3,
                 'username' => $username,
                 'password' => Hash::make($password),
                 'roleId' => $roleId,
