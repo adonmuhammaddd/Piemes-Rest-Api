@@ -114,7 +114,6 @@ class UserController extends Controller
 
             $result = [
                 'nama' => $nama,
-                'NIP' => $NIP,
                 'email' => $email,
                 'username' => $username,
                 'password' => Hash::make($password),
@@ -304,6 +303,6 @@ class UserController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 260,
             'user' => $result
-        ]);
+        ], 200);
     }
 }
